@@ -3,10 +3,36 @@ package com.denisjulio.bookstoread;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-public record Book(
-        String title,
-        String author,
-        LocalDate publishedOn) implements Comparable<Book> {
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@EqualsAndHashCode
+@ToString
+public class Book implements Comparable<Book> {
+
+    private final String title;
+    private final String author;
+    private final LocalDate publishedOn;
+    @EqualsAndHashCode.Exclude private LocalDate startedReadingOn;
+    @EqualsAndHashCode.Exclude private LocalDate finishedReadingOn;
+
+    public Book(String title, String author, LocalDate publishedOn) {
+        this.title = title;
+        this.author = author;
+        this.publishedOn = publishedOn;
+    }
+
+    public String title() {
+        return this.title;
+    }
+
+    public String author() {
+        return this.author;
+    }
+
+    public LocalDate publishedOn() {
+        return this.publishedOn;
+    }
 
     @Override
     public int compareTo(Book other) {
@@ -42,5 +68,17 @@ public record Book(
             throw new IllegalArgumentException("The bookString doesn´t match the required formmat");
         var args = bookString.split(":");
         return new Book(args[0], args[1], LocalDate.parse(args[2]));
+    }
+
+    public void startedReadingOn(LocalDate startedOn) {
+        this.startedReadingOn = startedOn;
+    }
+
+    public void finishedReadingOn(LocalDate finishedOn) {
+        this.finishedReadingOn = finishedOn;
+    }
+
+    public boolean isRead() {
+        return startedReadingOn != null && finishedReadingOn != null;
     }
 }
