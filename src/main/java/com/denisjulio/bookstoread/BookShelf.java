@@ -1,7 +1,5 @@
 package com.denisjulio.bookstoread;
 
-import static java.util.stream.Collectors.toList;
-
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +23,7 @@ public class BookShelf {
     }
 
     public List<Book> arrange(Comparator<Book> criteria) {
-        return books.stream().sorted(criteria).collect(toList());
+        return books.stream().sorted(criteria).toList();
     }
 
     public List<Book> arrange() {
@@ -58,7 +56,7 @@ public class BookShelf {
         return books.stream()
                 .filter(filter::apply)
                 .filter(b -> b.title().toLowerCase().contains(title.toLowerCase()))
-                .collect(toList());
+                .toList();
     }
 
 }
