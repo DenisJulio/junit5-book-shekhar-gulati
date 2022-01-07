@@ -2,10 +2,10 @@ package com.denisjulio;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.LocalDate;
 import java.time.Year;
@@ -53,7 +53,7 @@ public class BookShelfSpec {
 
         @Test
         @DisplayName("...when no book is added to it")
-        void whenNoBookAdded(TestInfo testInfo) throws Exception {
+        void whenNoBookAdded() throws Exception {
             var books = shelf.books();
             assertTrue(books.isEmpty(), () -> "BookShelf should be empty");
         }
@@ -87,13 +87,8 @@ public class BookShelfSpec {
         @DisplayName("...the books exposed to clients should be immutable")
         void booksReturnedFromBookShelfIsImutable() throws Exception {
             var books = shelf.books();
-            try {
-                books.add(mythicalManMonth);
-                fail(() -> "Should not be able to add book to books");
-            } catch (Exception e) {
-                assertTrue(e instanceof UnsupportedOperationException,
-                        () -> "Should throw UnsupportedOperationException");
-            }
+            assertThatThrownBy(() -> books.add(mythicalManMonth))
+                    .isInstanceOf(UnsupportedOperationException.class);
         }
     }
 
@@ -189,9 +184,9 @@ public class BookShelfSpec {
             Progress progress = shelf.progress();
             assertAll(
                     () -> assertThat(shelf.books()).isEmpty(),
-                    () -> assertThat(progress.completed()).isEqualTo(0),
-                    () -> assertThat(progress.toRead()).isEqualTo(0),
-                    () -> assertThat(progress.inProgress()).isEqualTo(0));
+                    () -> assertThat(progress.completed()).isZero(),
+                    () -> assertThat(progress.toRead()).isZero(),
+                    () -> assertThat(progress.inProgress()).isZero());
         }
     }
 
